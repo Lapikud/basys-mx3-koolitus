@@ -1,2 +1,2 @@
 # basys-mx3-koolitus
-Koolitus mx3 mikrokontrolleri jaoks
+Koolitus mx3 arendusplaadi jaoks
