@@ -8,24 +8,24 @@
 #include <xc-pic32m.h>
 #include "stdbool.h"
 
-void switchLed(void);
+// Prototypes
+
+//Checks value of swt and changes led either on or off
+void switchLed(unsigned char value);
 
 
 int main(void){
+	// init LED, LCD and switches
     LED_Init();
     LCD_Init();
     SWT_Init();
-//    __XC_UART = 1;
-    printf("%s\n", "tere vana kere");
-    
-    LED_SetValue(7,1);
-    LCD_WriteStringAtPos("Hello World!", 0, 0);
 
-    switchLed();
+    switchLed(1);
     return 0;
 }
 
 
+//Checks value of swt and changes led either on or off
 void switchLed(unsigned char value){
     if (SWT_GetValue(value) {
 		LED_SetValue(value, 1);
