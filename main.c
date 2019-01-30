@@ -26,7 +26,8 @@ int main(void){
 }
 
 
-void switchLed(void){
-    printf("%s", "tere");
-    //printf("See on: %u\n", SWT_GetGroupValue());
+void switchLed(unsigned char value){
+    if (SWT_GetValue(value) {
+		LED_SetValue(value, 1);
+	}
 }
