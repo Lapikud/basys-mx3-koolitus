@@ -11,7 +11,8 @@
 // Prototypes
 
 //Checks value of swt and changes led either on or off
-void switchLed(unsigned char value);
+void switchOneLed(unsigned char value);
+void switchAllLeds(void);
 
 
 int main(void){
@@ -21,13 +22,24 @@ int main(void){
     SWT_Init();
 
     switchLed(1);
+    switchAllLeds();
     return 0;
 }
 
 
 //Checks value of swt and changes led either on or off
-void switchLed(unsigned char value){
+void switchOneLed(unsigned char value){
     if (SWT_GetValue(value) {
 		LED_SetValue(value, 1);
+	} else {
+		LED_SetValue(value, 0);
+	}
+}
+
+//Checks all swt values and changes leds.
+void switchAllLeds(void){
+	int i = 0;
+	for(i = 0; i<8; i++){
+		switchOneLed(i);
 	}
 }
