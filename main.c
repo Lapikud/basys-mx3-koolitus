@@ -18,7 +18,13 @@ void switchLed(unsigned char value);
 void init(void);
 void toggleRGB();
 void sesamOpen();
-void WriteDigits(unsigned char id, unsigned char num, unsigned char point);
+int switchSelected();
+int checkPin(int sentPin[]);
+void displaySegment(int enteredPin[]);
+int checkSafe(int pin[]);
+int swtChanged();
+int pin[4] = {0, 1, 2, 3};
+int resetPin[4] = {0, 0, 0, 0};
 
 int pinCode[4];
 
@@ -55,11 +61,11 @@ int main(void){
 
     
     LCD_WriteStringAtPos("2", 0, 0);*/
-    DelayAprox10Us(10000);
+    /*DelayAprox10Us(10000);
     int swtValue = switchSelected();
     char stringi[17];
     itoa(stringi, swtValue, 10);
-    LCD_WriteStringAtPos(stringi, 0, 0);
+    LCD_WriteStringAtPos(stringi, 0, 0);*/
     
     //sesamOpen();
     //toggleRGB();
@@ -69,11 +75,18 @@ int main(void){
         printf( 
         LCD_WriteStringAtPos(swts, 0, 0);
         DelayAprox10Us(1000);
-    }*
-    /*while(true){
-    LED_SetValue(1,BTN_GetValue('C'));
-    DelayAprox10Us(1);
     }*/
+    while(true){
+    LED_SetValue(7,swtChanged());
+    DelayAprox10Us(1000);
+    }
+    
+   /* if(checkSafe(pin)){
+        sesamOpen();
+        toggleRGB();
+    }*/
+    
+    
         
     
     return 0;
@@ -86,6 +99,7 @@ void init(void){
     SWT_Init();
     BTN_Init();
     RGBLED_Init();
+    SSD_Init();
     //AUDIO_Init(0);
 
 }
@@ -127,5 +141,73 @@ int switchSelected()
     
     for (i = 0; i < 8 ; i++){
         if(SWT_GetValue(i)) return i;
+    }
+}
+int checkPin(int sentPin[]){
+	// returns 0 if wrong pin
+	// return 1 on correct pin
+	int i;
+	for(i = 0; i < 4; i++){
+		if(sentPin[i] != pin[i]){
+			return 0;
+		}
+	}
+	return 1;
+
+}
+
+void displaySegment(int enteredPin[]){
+	SSD_WriteDigits(enteredPin[3], enteredPin[2], enteredPin[1], enteredPin[0],
+	0, 0, 0, 0);
+}
+
+int checkSafe(int pin[]){
+	// result 0 = false
+	// result 1 = true 
+	int result = 0;
+	int enteredPin[4];
+	
+	//counters
+	int i, pinCounter;
+	// check if pin is correct
+	while(true){
+		//init-reset enteredPin to 0,0,0,0
+		*enteredPin = *resetPin;
+		pinCounter = 0;
+		while(true){
+			//listen to swt inputs
+			bool input = false;
+			displaySegment(enteredPin);
+			if(swtChanged() == 1){
+				input = true;
+				enteredPin[pinCounter] == switchSelected();				
+				pinCounter++;
+			} else if(swtChanged() == 0) {
+				input = false;
+			}
+			if (pinCounter == 3){break;}
+		}
+		
+
+
+
+		if (checkPin(enteredPin) == 1) {
+			LCD_WriteStringAtPos("korras", 0, 0);
+            result = 1;
+			break;
+		}
+	}
+	
+	
+	
+	return result;
+}
+
+int swtChanged()
+{
+    if (SWT_GetGroupValue() > 0){
+        return 1;
+    }else{
+        return 0;
     }
 }
