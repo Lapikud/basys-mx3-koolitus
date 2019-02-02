@@ -14,6 +14,8 @@
 void switchOneLed(unsigned char value);
 void switchAllLeds(void);
 
+int pin[4] = {0, 1, 2, 3};
+const int resetPin[4] = {0, 0, 0, 0};
 
 int main(void){
 	// init LED, LCD and switches
@@ -26,6 +28,63 @@ int main(void){
     return 0;
 }
 
+int checkPin(int sentPin[]){
+	// returns 0 if wrong pin
+	// return 1 on correct pin
+	int i;
+	for(i = 0; i < 4; i++){
+		if(sentPin[i] != pin[i]){
+			return 0;
+		}
+	}
+	return 1;
+
+}
+
+void displaySegment(int enteredPin[]){
+	
+}
+
+int checkSafe(int pin[]){
+	// result 0 = false
+	// result 1 = true 
+	int result = 1;
+	int enteredPin[4];
+	
+	//counters
+	int i, pinCounter;
+	// check if pin is correct
+	while(true){
+		//init-reset enteredPin to 0,0,0,0
+		enteredPin = resetPin;
+		pinCounter = 0;
+		while(true){
+			//listen to swt inputs
+			bool input = false;
+			if(swtChanged() == 1){
+				input = true;
+				enteredPin[pinCounter] == switchSelected();
+				//func for segment display
+				pinCounter++;
+			} else if(swtChanged() == 0) {
+				input = false;
+			}
+			if (pinCounter == 3){break;}
+		}
+		
+
+
+
+		if (checkPin(enteredPin) == 1) {
+			//Entered pin is correct
+			break;
+		}
+	}
+	
+	
+	
+	return result;
+}
 
 //Checks value of swt and changes led either on or off
 void switchOneLed(unsigned char value){
