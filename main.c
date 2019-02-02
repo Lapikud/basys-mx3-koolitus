@@ -16,6 +16,9 @@
 //Checks value of swt and changes led either on or off
 void switchLed(unsigned char value);
 void init(void);
+void toggleRGB();
+void sesamOpen();
+void WriteDigits(unsigned char id, unsigned char num, unsigned char point);
 
 int pinCode[4];
 
@@ -25,12 +28,12 @@ int main(void){
     char number;
     int c = 0;
     init();
-    pinCode[1] = 0;
-    pinCode[2] = 3;
-    pinCode[3] = 4;
-    pinCode[4] = 5; 
+    pinCode[0] = 0;
+    pinCode[1] = 3;
+    pinCode[2] = 4;
+    pinCode[3] = 5; 
    
-    LCD_WriteStringAtPos("Sisesta PIN kood", 0, 0);
+    /*LCD_WriteStringAtPos("Sisesta PIN kood", 0, 0);
     while(true){
         
         for(i = 0; i < 8; i++){
@@ -49,9 +52,24 @@ int main(void){
     LCD_DisplayClear();
     //itoa(i, number, 10);
     
-    LCD_WriteStringAtPos("2", 0, 0);
-   
+
     
+    LCD_WriteStringAtPos("2", 0, 0);*/
+    DelayAprox10Us(10000);
+    int swtValue = switchSelected();
+    char stringi[17];
+    itoa(stringi, swtValue, 10);
+    LCD_WriteStringAtPos(stringi, 0, 0);
+    
+    //sesamOpen();
+    //toggleRGB();
+    /*unsigned char swts;
+    
+    while(true){
+        printf( 
+        LCD_WriteStringAtPos(swts, 0, 0);
+        DelayAprox10Us(1000);
+    }*
     /*while(true){
     LED_SetValue(1,BTN_GetValue('C'));
     DelayAprox10Us(1);
@@ -67,6 +85,7 @@ void init(void){
     LCD_Init();
     SWT_Init();
     BTN_Init();
+    RGBLED_Init();
     //AUDIO_Init(0);
 
 }
@@ -75,4 +94,38 @@ void switchLed(unsigned char value){
     if (SWT_GetValue(value)) {
 		LED_SetValue(value, 1);
 	}
+}
+void sesamOpen()
+{
+    LCD_WriteStringAtPos("PIN kood on OK!", 0, 0);
+    AUDIO_Init(1);
+    
+}
+
+void toggleRGB()
+{
+    int i;
+    for (i = 0; i < 3 ; i++){
+        switch (i){
+            case 0:
+                RGBLED_SetValue(255,0, 0);
+                break;
+            case 1:
+                RGBLED_SetValue(0,255,0);
+                break;
+            case 2:
+                RGBLED_SetValue(0,0, 255);
+                i = -1;
+        }
+        DelayAprox10Us(1000);
+    }
+
+}
+int switchSelected()
+{ // output : swts
+    int i;
+    
+    for (i = 0; i < 8 ; i++){
+        if(SWT_GetValue(i)) return i;
+    }
 }
