@@ -33,7 +33,6 @@
 
 //Checks value of swt and changes led either on or off
 void init(void);
-void switchLed(unsigned char value);
 void sesamOpen();
 void toggleRGB();
 int switchSelected();
@@ -43,74 +42,15 @@ int swtChanged();
 int checkSafe(int pin[]);
 
 
-int resetPin[4] = {0, 0, 0, 0};
-
 int main(void){
-	// init LED, LCD and switches
-    /*int i; 
-    char number;
-    int c = 0;
-    init();
-    pinCode[0] = 0;
-    pinCode[1] = 3;
-    pinCode[2] = 4;
-    pinCode[3] = 5; */
-    init();
-    int code[4] = {1, 2, 3, 4};
     int pin[4] = {0, 1, 2, 3};
+    
+    init();
 
-    
-    
-   
-    /*LCD_WriteStringAtPos("Sisesta PIN kood", 0, 0);
-    while(true){
-        
-        for(i = 0; i < 8; i++){
-            
-            if(SWT_GetValue(i)){
-                LED_SetValue(7, 1);
-                c = 1;
-                break;
-            }
-        }
-        if(c){
-            break;
-        }
-    
-    }
-    LCD_DisplayClear();
-    //itoa(i, number, 10);
-    
-
-    
-    LCD_WriteStringAtPos("2", 0, 0);*/
-    /*DelayAprox10Us(10000);
-    int swtValue = switchSelected();
-    char stringi[17];
-    itoa(stringi, swtValue, 10);
-    LCD_WriteStringAtPos(stringi, 0, 0);*/
-    
-    //sesamOpen();
-    //toggleRGB();
-    /*unsigned char swts;
-    
-    while(true){
-        printf( 
-        LCD_WriteStringAtPos(swts, 0, 0);
-        DelayAprox10Us(1000);
-    }*/
-    /*while(true){
-    LED_SetValue(7,swtChanged());
-    DelayAprox10Us(1000);
-    }*/
-    
-   if(checkSafe(pin)){
+    if(checkSafe(pin)){
         sesamOpen();
         toggleRGB();
     }
-    
-    
-        
     
     return 0;
 }
@@ -123,19 +63,12 @@ void init(void){
     BTN_Init();
     RGBLED_Init();
     SSD_Init();
-    //AUDIO_Init(0);
 
 }
-//Checks value of swt and changes led either on or off
-void switchLed(unsigned char value){
-    if (SWT_GetValue(value)) {
-		LED_SetValue(value, 1);
-	}
-}
+
 void sesamOpen()
 {
     LCD_WriteStringAtPos("PIN kood on OK!", 0, 0);
-   /// AUDIO_Init(1);
     
 }
 
@@ -145,21 +78,21 @@ void toggleRGB()
     for (i = 0; i < 3 ; i++){
         switch (i){
             case 0:
-                RGBLED_SetValue(255,0, 0);
+                RGBLED_SetValue(255,0, 0);//RED
                 break;
             case 1:
-                RGBLED_SetValue(0,255,0);
+                RGBLED_SetValue(0,255,0);//GREEN
                 break;
             case 2:
-                RGBLED_SetValue(0,0, 255);
+                RGBLED_SetValue(0,0, 255);//BLUE
                 i = -1;
         }
         DelayAprox10Us(1000);
     }
 
 }
-int switchSelected()
-{ // output : swts
+int switchSelected(){ 
+    // output : turne on switch
     int i;
     
     for (i = 0; i < 8 ; i++){
@@ -203,6 +136,8 @@ int checkSafe(int pin[]){
 	// check if pin is correct
     bool input = false;
 	while(true){
+        LCD_DisplayClear();
+        LCD_WriteStringAtPos("Sisesta PIN kood", 0, 0);
 		//init-reset enteredPin to 0,0,0,0
 		enteredPin[0] = 0;
 		enteredPin[1] = 0;
@@ -211,16 +146,6 @@ int checkSafe(int pin[]){
 		pinCounter = 0;
 		while(true){
 			//listen to swt inputs
-			
-			/*displaySegment(enteredPin);
-			if(swtChanged() == 1){
-				input = true;
-				enteredPin[pinCounter] == switchSelected();				
-				pinCounter++;
-			} else if(swtChanged() == 0) {
-				input = false;
-			}
-			if (pinCounter == 3){break;}*/
             
 			displaySegment(enteredPin);
 			if(swtChanged()){
@@ -235,18 +160,17 @@ int checkSafe(int pin[]){
 			if (pinCounter == 4){displaySegment(enteredPin);break;}
             DelayAprox10Us(1000);
 		}
-		
-
-
 
 		if (checkPin(enteredPin,pin) == 1) {
-			//LCD_WriteStringAtPos("korras", 0, 0);
+			LCD_DisplayClear();
             result = 1;
 			break;
-		}
+		} else {
+            LCD_DisplayClear();
+            LCD_WriteStringAtPos("Vale PIN kood!", 0, 0);
+            DelayAprox10Us(5000);
+        }
 	}
-	
-	
 	
 	return result;
 }
