@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Basys-MX3
+PROJECTNAME=basys-mx3-koolitus
 
 # Active Configuration
 DEFAULTCONF=default

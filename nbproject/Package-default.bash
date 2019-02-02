@@ -10,9 +10,9 @@ CND_CONF=default
 CND_DISTDIR=dist
 TMPDIR=build/${CND_CONF}/${IMAGE_TYPE}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/Basys-MX3.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-OUTPUT_BASENAME=Basys-MX3.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-PACKAGE_TOP_DIR=basys-mx3/
+OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/basys-mx3-koolitus.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+OUTPUT_BASENAME=basys-mx3-koolitus.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+PACKAGE_TOP_DIR=basys-mx3-koolitus/
 
 # Functions
 function checkReturnCode
@@ -57,15 +57,15 @@ mkdir -p ${TMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory ${TMPDIR}/basys-mx3/bin
+makeDirectory ${TMPDIR}/basys-mx3-koolitus/bin
 copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}" 0755
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/package/basys-mx3.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/package/basys-mx3-koolitus.tar
 cd ${TMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/basys-mx3.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/basys-mx3-koolitus.tar *
 checkReturnCode
 
 # Cleanup

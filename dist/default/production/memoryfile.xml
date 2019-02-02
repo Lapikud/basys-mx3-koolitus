@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/default/production/Basys-MX3.production.elf">                 
+  <executable name="dist/default/production/basys-mx3-koolitus.production.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
       <length>531968</length>                 
-      <used>12568</used>                     
-      <free>519400</free>                     
+      <used>13380</used>                     
+      <free>518588</free>                     
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
       <length>131072</length>                 
-      <used>360</used>                     
-      <free>130712</free>                     
+      <used>122996</used>                     
+      <free>8076</free>                     
     </memory>                              
   </executable>                            
 </project>                                 
