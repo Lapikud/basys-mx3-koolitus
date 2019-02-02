@@ -2,6 +2,7 @@
 #include "headers/lcd.h"
 #include "headers/utils.h"
 #include "headers/swt.h"
+#include "headers/ssd.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -13,6 +14,7 @@
 //Checks value of swt and changes led either on or off
 void switchOneLed(unsigned char value);
 void switchAllLeds(void);
+void displaySegment(int enteredPin[]);
 
 int pin[4] = {0, 1, 2, 3};
 const int resetPin[4] = {0, 0, 0, 0};
@@ -22,6 +24,8 @@ int main(void){
     LED_Init();
     LCD_Init();
     SWT_Init();
+	SSD_Init();
+
 
     switchLed(1);
     switchAllLeds();
@@ -42,7 +46,8 @@ int checkPin(int sentPin[]){
 }
 
 void displaySegment(int enteredPin[]){
-	
+	SSD_WriteDigits(enteredPin[3], enteredPin[2], enteredPin[1], enteredPin[0],
+	0, 0, 0, 0);
 }
 
 int checkSafe(int pin[]){
@@ -61,10 +66,10 @@ int checkSafe(int pin[]){
 		while(true){
 			//listen to swt inputs
 			bool input = false;
+			displaySegment(enteredPin);
 			if(swtChanged() == 1){
 				input = true;
-				enteredPin[pinCounter] == switchSelected();
-				//func for segment display
+				enteredPin[pinCounter] == switchSelected();				
 				pinCounter++;
 			} else if(swtChanged() == 0) {
 				input = false;
@@ -76,7 +81,7 @@ int checkSafe(int pin[]){
 
 
 		if (checkPin(enteredPin) == 1) {
-			//Entered pin is correct
+			LCD_WriteStringAtPos("korras", 0, 0);
 			break;
 		}
 	}
