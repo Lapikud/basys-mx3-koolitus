@@ -10,34 +10,57 @@
 #include <stdlib.h>
 #include <xc-pic32m.h>
 #include "stdbool.h"
+#pragma config JTAGEN = OFF     
+#pragma config FWDTEN = OFF      
 
+
+/* ------------------------------------------------------------ */
+/*						Configuration Bits		                */
+/* ------------------------------------------------------------ */
+
+
+// Device Config Bits in  DEVCFG1:	
+#pragma config FNOSC =	FRCPLL
+#pragma config FSOSCEN =	OFF
+#pragma config POSCMOD =	XT
+#pragma config OSCIOFNC =	ON
+#pragma config FPBDIV =     DIV_2
+// Device Config Bits in  DEVCFG2:	
+#pragma config FPLLIDIV =	DIV_2
+#pragma config FPLLMUL =	MUL_20
+#pragma config FPLLODIV =	DIV_1
 // Prototypes
 
 //Checks value of swt and changes led either on or off
-void switchLed(unsigned char value);
 void init(void);
-void toggleRGB();
+void switchLed(unsigned char value);
 void sesamOpen();
+void toggleRGB();
 int switchSelected();
-int checkPin(int sentPin[]);
+int checkPin(int sentPin[], int pin[]);
 void displaySegment(int enteredPin[]);
-int checkSafe(int pin[]);
 int swtChanged();
-int pin[4] = {0, 1, 2, 3};
-int resetPin[4] = {0, 0, 0, 0};
+int checkSafe(int pin[]);
 
-int pinCode[4];
+
+int resetPin[4] = {0, 0, 0, 0};
 
 int main(void){
 	// init LED, LCD and switches
-    int i; 
+    /*int i; 
     char number;
     int c = 0;
     init();
     pinCode[0] = 0;
     pinCode[1] = 3;
     pinCode[2] = 4;
-    pinCode[3] = 5; 
+    pinCode[3] = 5; */
+    init();
+    int code[4] = {1, 2, 3, 4};
+    int pin[4] = {0, 1, 2, 3};
+
+    
+    
    
     /*LCD_WriteStringAtPos("Sisesta PIN kood", 0, 0);
     while(true){
@@ -76,15 +99,15 @@ int main(void){
         LCD_WriteStringAtPos(swts, 0, 0);
         DelayAprox10Us(1000);
     }*/
-    while(true){
+    /*while(true){
     LED_SetValue(7,swtChanged());
     DelayAprox10Us(1000);
-    }
+    }*/
     
-   /* if(checkSafe(pin)){
+   if(checkSafe(pin)){
         sesamOpen();
         toggleRGB();
-    }*/
+    }
     
     
         
@@ -112,7 +135,7 @@ void switchLed(unsigned char value){
 void sesamOpen()
 {
     LCD_WriteStringAtPos("PIN kood on OK!", 0, 0);
-    AUDIO_Init(1);
+   /// AUDIO_Init(1);
     
 }
 
@@ -143,7 +166,7 @@ int switchSelected()
         if(SWT_GetValue(i)) return i;
     }
 }
-int checkPin(int sentPin[]){
+int checkPin(int sentPin[], int pin[]){
 	// returns 0 if wrong pin
 	// return 1 on correct pin
 	int i;
@@ -159,8 +182,16 @@ int checkPin(int sentPin[]){
 void displaySegment(int enteredPin[]){
 	SSD_WriteDigits(enteredPin[3], enteredPin[2], enteredPin[1], enteredPin[0],
 	0, 0, 0, 0);
+   
 }
-
+int swtChanged()
+{
+    if (SWT_GetGroupValue() > 0){
+        return 1;
+    }else{
+        return 0;
+    }
+}
 int checkSafe(int pin[]){
 	// result 0 = false
 	// result 1 = true 
@@ -170,14 +201,18 @@ int checkSafe(int pin[]){
 	//counters
 	int i, pinCounter;
 	// check if pin is correct
+    bool input = false;
 	while(true){
 		//init-reset enteredPin to 0,0,0,0
-		*enteredPin = *resetPin;
+		enteredPin[0] = 0;
+		enteredPin[1] = 0;
+		enteredPin[2] = 0;
+		enteredPin[3] = 0;
 		pinCounter = 0;
 		while(true){
 			//listen to swt inputs
-			bool input = false;
-			displaySegment(enteredPin);
+			
+			/*displaySegment(enteredPin);
 			if(swtChanged() == 1){
 				input = true;
 				enteredPin[pinCounter] == switchSelected();				
@@ -185,14 +220,27 @@ int checkSafe(int pin[]){
 			} else if(swtChanged() == 0) {
 				input = false;
 			}
-			if (pinCounter == 3){break;}
+			if (pinCounter == 3){break;}*/
+            
+			displaySegment(enteredPin);
+			if(swtChanged()){
+                if(!input){				
+                    input = true;
+                    enteredPin[pinCounter] = switchSelected();				
+                    pinCounter++;
+                }  
+            } else {
+                input = false;
+            }
+			if (pinCounter == 4){displaySegment(enteredPin);break;}
+            DelayAprox10Us(1000);
 		}
 		
 
 
 
-		if (checkPin(enteredPin) == 1) {
-			LCD_WriteStringAtPos("korras", 0, 0);
+		if (checkPin(enteredPin,pin) == 1) {
+			//LCD_WriteStringAtPos("korras", 0, 0);
             result = 1;
 			break;
 		}
@@ -203,11 +251,3 @@ int checkSafe(int pin[]){
 	return result;
 }
 
-int swtChanged()
-{
-    if (SWT_GetGroupValue() > 0){
-        return 1;
-    }else{
-        return 0;
-    }
-}
