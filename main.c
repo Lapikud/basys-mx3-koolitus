@@ -60,15 +60,15 @@ int main(void)
 /***	init
 **
 **	Parameters:
-**		
 **
-**	Return Value: 
-**		
+**
+**	Return Value:
+**
 **
 **	Description:
 **		Initialize LED, LCD, SWT, BTN, RGBLED and SSD(Seven segment display) modules.
 **		This is needed to prepare hardware for modules.
-**              
+**
 */
 void init(void)
 {
@@ -84,14 +84,14 @@ void init(void)
 /***	sesamOpen
 **
 **	Parameters:
-**		
 **
-**	Return Value: 
-**		
+**
+**	Return Value:
+**
 **
 **	Description:
 **		Displays confirmation message on success.
-**          
+**
 */
 void sesamOpen()
 {
@@ -102,15 +102,15 @@ void sesamOpen()
 /***	toggleRGB
 **
 **	Parameters:
-**		
 **
-**	Return Value: 
-**		
+**
+**	Return Value:
+**
 **
 **	Description:
 **		Flash red, green and blue RGBLed
 **		NB! This function does not exit!
-**		Remember to use this at the end if your code!          
+**		Remember to use this at the end if your code!
 **
 */
 void toggleRGB()
@@ -138,15 +138,15 @@ void toggleRGB()
 /***	switchSelected
 **
 **	Parameters:
-**		
 **
-**	Return Value: 
+**
+**	Return Value:
 **		int i			- number of the switch that was enable between 0 - 7
-**		
+**
 **
 **	Description:
 **		Only returns value if there is a switch turned on,
-**		in case of multiple switches on, returns first found         
+**		in case of multiple switches on, returns first found
 **
 */
 int switchSelected()
@@ -156,8 +156,7 @@ int switchSelected()
 
 	for (i = 0; i < 8; i++)
 	{
-		if (SWT_GetValue(i))
-			return i;
+		if (SWT_GetValue(i)) return i;
 	}
 }
 
@@ -168,7 +167,7 @@ int switchSelected()
 **		int sentPin		- Pin that the user entered
 **		int pin			- Correct pin
 **
-**	Return Value: 
+**	Return Value:
 **		int			- Value of true and false if sentPin matched
 **							0 when pin was wrong
 **							1 when pin was correct
@@ -197,11 +196,11 @@ int checkPin(int sentPin[], int pin[])
 **	Parameters:
 **		int enteredPin[]- pin from user input
 **
-**	Return Value: 
-**		
+**	Return Value:
+**
 **
 **	Description:
-**		Map entered pin to SSD (Seven Segment Display)          
+**		Map entered pin to SSD (Seven Segment Display)
 **		Its mapped from right to left
 **
 */
@@ -216,7 +215,7 @@ void displaySegment(int enteredPin[])
 **
 **	Parameters:
 **
-**	Return Value: 
+**	Return Value:
 **		int 		- Boolean if any swt is active
 **							0 when none active
 **							1 when any is active
@@ -243,7 +242,7 @@ int swtChanged()
 **	Parameters:
 **		int pin[]	- Value of user set pin as an array
 **
-**	Return Value: 
+**	Return Value:
 **		int result	- Shows if safe is opened
 **							1 when safe is opened
 **
@@ -322,8 +321,8 @@ int checkSafe(int pin[])
 **
 **	Parameters:
 **
-**	Return Value: 
-**		
+**	Return Value:
+**
 **
 **	Description:
 **		Flips LED on or off based on SWT state.
@@ -338,3 +337,30 @@ void LEDTogglBySwitch()
 		LED_SetValue(i, SWT_GetValue(i));
 	}
 }
+
+/* ------------------------------------------------------------ */
+/***	BTNPressed
+**
+**	Parameters:
+**      btnLetter - letter of button on board
+**                  'R' , 'L' , 'U', 'D', 'C'
+**
+**	Return Value:
+**         1 - if chosen button is pressed
+**
+**	Description:
+**		When chosen button is pressed down, a function returns 1,
+**		otherwise function is running
+**
+*/
+int BTNPressed(unsigned char btnLetter)
+{
+    while(true)
+    {
+        if (BTN_GetValue(btnLetter)) // true, if button is pressed
+        {
+            return 1;
+        }
+    }
+}
+
