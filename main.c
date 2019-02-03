@@ -40,6 +40,7 @@ void displaySegment(int enteredPin[]);
 int swtChanged();
 int checkSafe(int pin[]);
 void LEDTogglBySwitch();
+int BTNPressed(unsigned char btnLetter);
 
 int main(void)
 {
@@ -151,7 +152,6 @@ void toggleRGB()
 */
 int switchSelected()
 {
-	// output : turn on switch
 	int i;
 
 	for (i = 0; i < 8; i++)
