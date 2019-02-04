@@ -12,6 +12,18 @@
       <itemPath>headers/utils.h</itemPath>
       <itemPath>headers/swt.c</itemPath>
       <itemPath>headers/swt.h</itemPath>
+      <itemPath>headers/ssd.c</itemPath>
+      <itemPath>headers/ssd.h</itemPath>
+      <itemPath>headers/audio.c</itemPath>
+      <itemPath>headers/audio.h</itemPath>
+      <itemPath>headers/btn.c</itemPath>
+      <itemPath>headers/btn.h</itemPath>
+      <itemPath>headers/mic.c</itemPath>
+      <itemPath>headers/mic.h</itemPath>
+      <itemPath>headers/adc.c</itemPath>
+      <itemPath>headers/adc.h</itemPath>
+      <itemPath>headers/rgbled.c</itemPath>
+      <itemPath>headers/rgbled.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

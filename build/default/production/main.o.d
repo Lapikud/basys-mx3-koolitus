@@ -4,4 +4,6 @@ headers/led.h  \
 headers/config.h  \
  headers/lcd.h  \
 headers/utils.h  \
-headers/swt.h 
+headers/swt.h  \
+headers/ssd.h  \
+ headers/audio.h 
