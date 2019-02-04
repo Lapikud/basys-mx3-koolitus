@@ -32,7 +32,7 @@
 // Prototypes
 
 void init(void);
-void sesamOpen();
+void sesameOpen();
 void toggleRGB();
 int switchSelected();
 int checkPin(int sentPin[], int pin[]);
@@ -50,7 +50,7 @@ int main(void)
 
 	if (checkSafe(pin))
 	{
-		sesamOpen();
+		sesameOpen();
 		toggleRGB();
 	}
 
@@ -82,7 +82,7 @@ void init(void)
 }
 
 /* ------------------------------------------------------------ */
-/***	sesamOpen
+/***	sesameOpen
 **
 **	Parameters:
 **
@@ -94,7 +94,7 @@ void init(void)
 **		Displays confirmation message on success.
 **
 */
-void sesamOpen()
+void sesameOpen()
 {
 	LCD_WriteStringAtPos("PIN kood on OK!", 0, 0);
 }
