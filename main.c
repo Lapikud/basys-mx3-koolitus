@@ -273,7 +273,7 @@ int checkSafe(int pin[])
 			//listen to swt inputs
 
 			displaySegment(enteredPin);
-			LEDTogglBySwitch();
+
 			if (swtChanged())
 			{
 				if (!input)
@@ -294,7 +294,6 @@ int checkSafe(int pin[])
 			}
 			DelayAprox10Us(1000);
 		}
-        if(BTNPressed('C')){
 		if (checkPin(enteredPin, pin) == 1)
 		{
 			LCD_DisplayClear();
@@ -306,7 +305,7 @@ int checkSafe(int pin[])
 			LCD_DisplayClear();
 			LCD_WriteStringAtPos("Vale PIN kood!", 0, 0);
 			DelayAprox10Us(5000);
-		}}
+		}
 	}
 
 	return result;
