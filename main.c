@@ -41,6 +41,7 @@ int swtChanged();
 int checkSafe(int pin[]);
 void LEDTogglBySwitch();
 int BTNPressed(unsigned char btnLetter);
+<<<<<<< HEAD
 
 int main(void)
 {
@@ -53,6 +54,21 @@ int main(void)
 		sesameOpen();
 		toggleRGB();
 	}
+
+	return 0;
+}
+
+/* ------------------------------------------------------------ */
+/***	init
+=======
+
+int main(void)
+{
+	int pin[4] = {0, 1, 2, 3};
+
+	init();
+
+	//lisa oma kood siia
 
 	return 0;
 }
@@ -82,7 +98,8 @@ void init(void)
 }
 
 /* ------------------------------------------------------------ */
-/***	sesameOpen
+/***	sesamOpen
+>>>>>>> examples
 **
 **	Parameters:
 **
@@ -91,6 +108,44 @@ void init(void)
 **
 **
 **	Description:
+<<<<<<< HEAD
+**		Initialize LED, LCD, SWT, BTN, RGBLED and SSD(Seven segment display) modules.
+**		This is needed to prepare hardware for modules.
+**
+*/
+void init(void)
+{
+	LED_Init();
+	LCD_Init();
+	SWT_Init();
+	BTN_Init();
+	RGBLED_Init();
+	SSD_Init();
+}
+
+/* ------------------------------------------------------------ */
+/***	sesameOpen
+=======
+**		Displays confirmation message on success.
+**
+*/
+void sesamOpen()
+{
+	LCD_WriteStringAtPos("PIN kood on OK!", 0, 0);
+}
+
+/* ------------------------------------------------------------ */
+/***	toggleRGB
+>>>>>>> examples
+**
+**	Parameters:
+**
+**
+**	Return Value:
+**
+**
+**	Description:
+<<<<<<< HEAD
 **		Displays confirmation message on success.
 **
 */
@@ -116,6 +171,15 @@ void sesameOpen()
 */
 void toggleRGB()
 {
+=======
+**		Flash red, green and blue RGBLed
+**		NB! This function does not exit!
+**		Remember to use this at the end if your code!
+**
+*/
+void toggleRGB()
+{
+>>>>>>> examples
 	int i;
 	for (i = 0; i < 3; i++)
 	{
@@ -164,8 +228,13 @@ int switchSelected()
 /***	checkPin
 **
 **	Parameters:
+<<<<<<< HEAD
 **		int sentPin		- Pin that the user entered
 **		int pin			- Correct pin
+=======
+**		int sentPin[]		- Pin that the user entered
+**		int pin[]			- Correct pin
+>>>>>>> examples
 **
 **	Return Value:
 **		int			- Value of true and false if sentPin matched
@@ -277,6 +346,7 @@ int checkSafe(int pin[])
 			//listen to swt inputs
 
 			displaySegment(enteredPin);
+<<<<<<< HEAD
 			LEDTogglBySwitch();
 			if (swtChanged())
 			{
@@ -299,6 +369,29 @@ int checkSafe(int pin[])
 			DelayAprox10Us(1000);
 		}
 
+=======
+
+			if (swtChanged())
+			{
+				if (!input)
+				{
+					input = true;
+					enteredPin[pinCounter] = switchSelected();
+					pinCounter++;
+				}
+			}
+			else
+			{
+				input = false;
+			}
+			if (pinCounter == 4)
+			{
+				displaySegment(enteredPin);
+				break;
+			}
+			DelayAprox10Us(1000);
+		}
+>>>>>>> examples
 		if (checkPin(enteredPin, pin) == 1)
 		{
 			LCD_DisplayClear();
@@ -330,6 +423,7 @@ int checkSafe(int pin[])
 **
 */
 void LEDTogglBySwitch()
+<<<<<<< HEAD
 {
 	int i;
 	for (i = 0; i < 8; i++)
@@ -355,6 +449,33 @@ void LEDTogglBySwitch()
 */
 int BTNPressed(unsigned char btnLetter)
 {
+=======
+{
+	int i;
+	for (i = 0; i < 8; i++)
+	{
+		LED_SetValue(i, SWT_GetValue(i));
+	}
+}
+
+/* ------------------------------------------------------------ */
+/***	BTNPressed
+**
+**	Parameters:
+**      btnLetter - letter of button on board
+**                  'R' , 'L' , 'U', 'D', 'C'
+**
+**	Return Value:
+**         1 - if chosen button is pressed
+**
+**	Description:
+**		When chosen button is pressed down, a function returns 1,
+**		otherwise function is running
+**
+*/
+int BTNPressed(unsigned char btnLetter)
+{
+>>>>>>> examples
     while(true)
     {
         if (BTN_GetValue(btnLetter)) // true, if button is pressed
