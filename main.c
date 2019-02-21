@@ -41,13 +41,22 @@ int swtChanged();
 int checkSafe(int pin[]);
 void LEDTogglBySwitch();
 int BTNPressed(unsigned char btnLetter);
+void displayWrongPINMessage(void);
+void resetPIN(int rPin[]);
+void displayEnterPINMessage(void);
+void insertPINBySwitches(int pin[]);
 
 int main(void)
 {
 	int pin[4] = {0, 1, 2, 3};
-
+    int res;
 	init();
-
+    res = checkSafe(pin);
+    if (res == 1){
+        sesamOpen();
+        toggleRGB();
+    }
+    
 	//lisa oma kood siia
 
 	return 0;
@@ -138,7 +147,7 @@ void toggleRGB()
 **
 **
 **	Return Value:
-**		int i			- number of the switch that was enable between 0 - 7
+**		int i			- number of the switch that was enabled between 0 - 7
 **
 **
 **	Description:
@@ -254,46 +263,13 @@ int checkSafe(int pin[])
 	int result = 0;
 	int enteredPin[4];
 
-	//counters
-	int i, pinCounter;
-	// check if pin is correct
-	bool input = false;
+	//counter
+	int i;
+	
 	while (true)
 	{
-		LCD_DisplayClear();
-		LCD_WriteStringAtPos("Sisesta PIN kood", 0, 0);
-		//init-reset enteredPin to 0,0,0,0
-		enteredPin[0] = 0;
-		enteredPin[1] = 0;
-		enteredPin[2] = 0;
-		enteredPin[3] = 0;
-		pinCounter = 0;
-		while (true)
-		{
-			//listen to swt inputs
-
-			displaySegment(enteredPin);
-
-			if (swtChanged())
-			{
-				if (!input)
-				{
-					input = true;
-					enteredPin[pinCounter] = switchSelected();
-					pinCounter++;
-				}
-			}
-			else
-			{
-				input = false;
-			}
-			if (pinCounter == 4)
-			{
-				displaySegment(enteredPin);
-				break;
-			}
-			DelayAprox10Us(1000);
-		}
+		displayEnterPINMessage();
+        insertPINBySwitches(enteredPin);
 		if (checkPin(enteredPin, pin) == 1)
 		{
 			LCD_DisplayClear();
@@ -302,9 +278,7 @@ int checkSafe(int pin[])
 		}
 		else
 		{
-			LCD_DisplayClear();
-			LCD_WriteStringAtPos("Vale PIN kood!", 0, 0);
-			DelayAprox10Us(5000);
+			displayWrongPINMessage();
 		}
 	}
 
@@ -357,5 +331,108 @@ int BTNPressed(unsigned char btnLetter)
             return 1;
         }
     }
+}
+/* ------------------------------------------------------------ */
+/***	displayWrongPINMessage
+**
+**	Parameters:
+**
+**	Return Value:
+**
+**	Description:
+**		Displays "Vale PIN kood!" on the LCD screen
+**		
+**
+*/
+void displayWrongPINMessage(void)
+{
+    LCD_DisplayClear();
+	LCD_WriteStringAtPos("Vale PIN kood!", 0, 0);
+	DelayAprox10Us(5000);
+}
+/* ------------------------------------------------------------ */
+/***	displayEnterPINMessage
+**
+**	Parameters:
+**
+**	Return Value:
+**
+**	Description:
+**		Displays "Sisesta PIN kood!" on the LCD screen
+**		
+**
+*/
+void displayEnterPINMessage(void)
+{
+    LCD_DisplayClear();
+	LCD_WriteStringAtPos("Sisesta PIN kood", 0, 0);
+
+}
+/* ------------------------------------------------------------ */
+/***	resetPIN
+**
+**	Parameters:
+**      int rPin[] - PIN code, which is going to be reseted  
+**
+**	Return Value:
+**
+**	Description:
+**		Resets PIN code by putting all numbers to zero .
+**		rPin[] = {0, 0 ,0, 0}
+**
+*/
+void resetPIN(int rPin[])
+{
+    rPin[0] = 0;
+    rPin[1] = 0;
+    rPin[2] = 0;
+    rPin[3] = 0;
+}
+/* ------------------------------------------------------------ */
+/***	insertPINBySwitches
+**
+**	Parameters:
+**      int Pin[] - PIN code, which is going to entered
+**
+**	Return Value:
+**
+**	Description:
+**		Let user to insert safe PIN code by switches(number by number) 
+**		Displays flipped switch number on the segment display.
+**      Function ends when the PIN code is entered.
+**
+*/
+void insertPINBySwitches(int pin[])
+{
+    //Counter
+    int pinCounter = 0;
+    // check if pin is correct
+    bool input = false;
+    //init-reset PIN to 0,0,0,0
+    resetPIN(pin);
+    while (true)
+	{
+		//listen to swt inputs
+		displaySegment(pin);
+		if (swtChanged())
+		{
+			if (!input)
+			{
+			    input = true;
+				pin[pinCounter] = switchSelected();
+				pinCounter++;
+				}
+			}
+			else
+			{
+				input = false;
+			}
+			if (pinCounter == 4)
+			{
+				displaySegment(pin);
+				break;
+			}
+			DelayAprox10Us(1000);
+		}
 }
 
