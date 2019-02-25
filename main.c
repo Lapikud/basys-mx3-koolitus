@@ -38,24 +38,19 @@ int switchSelected();
 int checkPin(int sentPin[], int pin[]);
 void displaySegment(int enteredPin[]);
 int swtChanged();
-int checkSafe(int pin[]);
-void LEDTogglBySwitch();
-int BTNPressed(unsigned char btnLetter);
 void displayWrongPINMessage(void);
 void resetPIN(int rPin[]);
 void displayEnterPINMessage(void);
 void insertPINBySwitches(int pin[]);
+int checkSafe(int pin[]);
+void LEDTogglBySwitch();
+int BTNPressed(unsigned char btnLetter);
 
 int main(void)
 {
 	int pin[4] = {0, 1, 2, 3};
-    int res;
+    
 	init();
-    res = checkSafe(pin);
-    if (res == 1){
-        sesamOpen();
-        toggleRGB();
-    }
     
 	//lisa oma kood siia
 
@@ -240,98 +235,6 @@ int swtChanged()
 		return 0;
 	}
 }
-
-/* ------------------------------------------------------------ */
-/***	checkSafe
-**
-**	Parameters:
-**		int pin[]	- Value of user set pin as an array
-**
-**	Return Value:
-**		int result	- Shows if safe is opened
-**							1 when safe is opened
-**
-**	Description:
-**		Lets user input values from switches and displays instructions
-**		on LCD for what to do. Only exits (with 1) when pins match.
-**
-*/
-int checkSafe(int pin[])
-{
-	// result 0 = false
-	// result 1 = true
-	int result = 0;
-	int enteredPin[4];
-
-	//counter
-	int i;
-	
-	while (true)
-	{
-		displayEnterPINMessage();
-        insertPINBySwitches(enteredPin);
-		if (checkPin(enteredPin, pin) == 1)
-		{
-			LCD_DisplayClear();
-			result = 1;
-			break;
-		}
-		else
-		{
-			displayWrongPINMessage();
-		}
-	}
-
-	return result;
-}
-
-/* ------------------------------------------------------------ */
-/***	LEDTogglBySwitch
-**
-**	Parameters:
-**
-**	Return Value:
-**
-**
-**	Description:
-**		Flips LED on or off based on SWT state.
-**		Example: SWT 0 is on, so LED 0 is on
-**
-*/
-void LEDTogglBySwitch()
-{
-	int i;
-	for (i = 0; i < 8; i++)
-	{
-		LED_SetValue(i, SWT_GetValue(i));
-	}
-}
-
-/* ------------------------------------------------------------ */
-/***	BTNPressed
-**
-**	Parameters:
-**      btnLetter - letter of button on board
-**                  'R' , 'L' , 'U', 'D', 'C'
-**
-**	Return Value:
-**         1 - if chosen button is pressed
-**
-**	Description:
-**		When chosen button is pressed down, a function returns 1,
-**		otherwise function is running
-**
-*/
-int BTNPressed(unsigned char btnLetter)
-{
-    while(true)
-    {
-        if (BTN_GetValue(btnLetter)) // true, if button is pressed
-        {
-            return 1;
-        }
-    }
-}
 /* ------------------------------------------------------------ */
 /***	displayWrongPINMessage
 **
@@ -434,5 +337,98 @@ void insertPINBySwitches(int pin[])
 			}
 			DelayAprox10Us(1000);
 		}
+}
+
+
+/* ------------------------------------------------------------ */
+/***	checkSafe
+**
+**	Parameters:
+**		int pin[]	- Value of user set pin as an array
+**
+**	Return Value:
+**		int result	- Shows if safe is opened
+**							1 when safe is opened
+**
+**	Description:
+**		Lets user input values from switches and displays instructions
+**		on LCD for what to do. Only exits (with 1) when pins match.
+**
+*/
+int checkSafe(int pin[])
+{
+	// result 0 = false
+	// result 1 = true
+	int result = 0;
+	int enteredPin[4];
+
+	//counter
+	int i;
+	
+	while (true)
+	{
+		displayEnterPINMessage();
+        insertPINBySwitches(enteredPin);
+		if (checkPin(enteredPin, pin) == 1)
+		{
+			LCD_DisplayClear();
+			result = 1;
+			break;
+		}
+		else
+		{
+			displayWrongPINMessage();
+		}
+	}
+
+	return result;
+}
+
+/* ------------------------------------------------------------ */
+/***	LEDTogglBySwitch
+**
+**	Parameters:
+**
+**	Return Value:
+**
+**
+**	Description:
+**		Flips LED on or off based on SWT state.
+**		Example: SWT 0 is on, so LED 0 is on
+**
+*/
+void LEDTogglBySwitch()
+{
+	int i;
+	for (i = 0; i < 8; i++)
+	{
+		LED_SetValue(i, SWT_GetValue(i));
+	}
+}
+
+/* ------------------------------------------------------------ */
+/***	BTNPressed
+**
+**	Parameters:
+**      btnLetter - letter of button on board
+**                  'R' , 'L' , 'U', 'D', 'C'
+**
+**	Return Value:
+**         1 - if chosen button is pressed
+**
+**	Description:
+**		When chosen button is pressed down, a function returns 1,
+**		otherwise function is running
+**
+*/
+int BTNPressed(unsigned char btnLetter)
+{
+    while(true)
+    {
+        if (BTN_GetValue(btnLetter)) // true, if button is pressed
+        {
+            return 1;
+        }
+    }
 }
 
