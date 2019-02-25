@@ -32,42 +32,26 @@
 // Prototypes
 
 void init(void);
-void sesameOpen();
+void sesamOpen();
 void toggleRGB();
 int switchSelected();
 int checkPin(int sentPin[], int pin[]);
 void displaySegment(int enteredPin[]);
 int swtChanged();
+void displayWrongPINMessage(void);
+void resetPIN(int rPin[]);
+void displayEnterPINMessage(void);
+void insertPINBySwitches(int pin[]);
 int checkSafe(int pin[]);
 void LEDTogglBySwitch();
 int BTNPressed(unsigned char btnLetter);
-<<<<<<< HEAD
 
 int main(void)
 {
 	int pin[4] = {0, 1, 2, 3};
-
+    
 	init();
-
-	if (checkSafe(pin))
-	{
-		sesameOpen();
-		toggleRGB();
-	}
-
-	return 0;
-}
-
-/* ------------------------------------------------------------ */
-/***	init
-=======
-
-int main(void)
-{
-	int pin[4] = {0, 1, 2, 3};
-
-	init();
-
+    
 	//lisa oma kood siia
 
 	return 0;
@@ -99,7 +83,6 @@ void init(void)
 
 /* ------------------------------------------------------------ */
 /***	sesamOpen
->>>>>>> examples
 **
 **	Parameters:
 **
@@ -108,24 +91,6 @@ void init(void)
 **
 **
 **	Description:
-<<<<<<< HEAD
-**		Initialize LED, LCD, SWT, BTN, RGBLED and SSD(Seven segment display) modules.
-**		This is needed to prepare hardware for modules.
-**
-*/
-void init(void)
-{
-	LED_Init();
-	LCD_Init();
-	SWT_Init();
-	BTN_Init();
-	RGBLED_Init();
-	SSD_Init();
-}
-
-/* ------------------------------------------------------------ */
-/***	sesameOpen
-=======
 **		Displays confirmation message on success.
 **
 */
@@ -136,26 +101,6 @@ void sesamOpen()
 
 /* ------------------------------------------------------------ */
 /***	toggleRGB
->>>>>>> examples
-**
-**	Parameters:
-**
-**
-**	Return Value:
-**
-**
-**	Description:
-<<<<<<< HEAD
-**		Displays confirmation message on success.
-**
-*/
-void sesameOpen()
-{
-	LCD_WriteStringAtPos("PIN kood on OK!", 0, 0);
-}
-
-/* ------------------------------------------------------------ */
-/***	toggleRGB
 **
 **	Parameters:
 **
@@ -171,15 +116,6 @@ void sesameOpen()
 */
 void toggleRGB()
 {
-=======
-**		Flash red, green and blue RGBLed
-**		NB! This function does not exit!
-**		Remember to use this at the end if your code!
-**
-*/
-void toggleRGB()
-{
->>>>>>> examples
 	int i;
 	for (i = 0; i < 3; i++)
 	{
@@ -206,7 +142,7 @@ void toggleRGB()
 **
 **
 **	Return Value:
-**		int i			- number of the switch that was enable between 0 - 7
+**		int i			- number of the switch that was enabled between 0 - 7
 **
 **
 **	Description:
@@ -228,13 +164,8 @@ int switchSelected()
 /***	checkPin
 **
 **	Parameters:
-<<<<<<< HEAD
-**		int sentPin		- Pin that the user entered
-**		int pin			- Correct pin
-=======
 **		int sentPin[]		- Pin that the user entered
 **		int pin[]			- Correct pin
->>>>>>> examples
 **
 **	Return Value:
 **		int			- Value of true and false if sentPin matched
@@ -304,6 +235,110 @@ int swtChanged()
 		return 0;
 	}
 }
+/* ------------------------------------------------------------ */
+/***	displayWrongPINMessage
+**
+**	Parameters:
+**
+**	Return Value:
+**
+**	Description:
+**		Displays "Vale PIN kood!" on the LCD screen
+**		
+**
+*/
+void displayWrongPINMessage(void)
+{
+    LCD_DisplayClear();
+	LCD_WriteStringAtPos("Vale PIN kood!", 0, 0);
+	DelayAprox10Us(5000);
+}
+/* ------------------------------------------------------------ */
+/***	displayEnterPINMessage
+**
+**	Parameters:
+**
+**	Return Value:
+**
+**	Description:
+**		Displays "Sisesta PIN kood!" on the LCD screen
+**		
+**
+*/
+void displayEnterPINMessage(void)
+{
+    LCD_DisplayClear();
+	LCD_WriteStringAtPos("Sisesta PIN kood", 0, 0);
+
+}
+/* ------------------------------------------------------------ */
+/***	resetPIN
+**
+**	Parameters:
+**      int rPin[] - PIN code, which is going to be reseted  
+**
+**	Return Value:
+**
+**	Description:
+**		Resets PIN code by putting all numbers to zero .
+**		rPin[] = {0, 0 ,0, 0}
+**
+*/
+void resetPIN(int rPin[])
+{
+    rPin[0] = 0;
+    rPin[1] = 0;
+    rPin[2] = 0;
+    rPin[3] = 0;
+}
+/* ------------------------------------------------------------ */
+/***	insertPINBySwitches
+**
+**	Parameters:
+**      int Pin[] - PIN code, which is going to entered
+**
+**	Return Value:
+**
+**	Description:
+**		Let user to insert safe PIN code by switches(number by number) 
+**		Displays flipped switch number on the segment display.
+**      Function ends when the PIN code is entered.
+**
+*/
+void insertPINBySwitches(int pin[])
+{
+    //Counter
+    int pinCounter = 0;
+    // check if pin is correct
+    bool input = false;
+    //init-reset PIN to 0,0,0,0
+    resetPIN(pin);
+    while (true)
+	{
+		//listen to swt inputs
+		displaySegment(pin);
+		if (swtChanged())
+		{
+			if (!input)
+			{
+			    input = true;
+				pin[pinCounter] = switchSelected();
+				pinCounter++;
+				}
+			}
+			else
+			{
+				input = false;
+			}
+			if (pinCounter == 4)
+			{
+				displaySegment(pin);
+				break;
+			}
+			DelayAprox10Us(1000);
+		}
+}
+
 
 /* ------------------------------------------------------------ */
 /***	checkSafe
@@ -327,71 +362,13 @@ int checkSafe(int pin[])
 	int result = 0;
 	int enteredPin[4];
 
-	//counters
-	int i, pinCounter;
-	// check if pin is correct
-	bool input = false;
+	//counter
+	int i;
+	
 	while (true)
 	{
-		LCD_DisplayClear();
-		LCD_WriteStringAtPos("Sisesta PIN kood", 0, 0);
-		//init-reset enteredPin to 0,0,0,0
-		enteredPin[0] = 0;
-		enteredPin[1] = 0;
-		enteredPin[2] = 0;
-		enteredPin[3] = 0;
-		pinCounter = 0;
-		while (true)
-		{
-			//listen to swt inputs
-
-			displaySegment(enteredPin);
-<<<<<<< HEAD
-			LEDTogglBySwitch();
-			if (swtChanged())
-			{
-				if (!input)
-				{
-					input = true;
-					enteredPin[pinCounter] = switchSelected();
-					pinCounter++;
-				}
-			}
-			else
-			{
-				input = false;
-			}
-			if (pinCounter == 4)
-			{
-				displaySegment(enteredPin);
-				break;
-			}
-			DelayAprox10Us(1000);
-		}
-
-=======
-
-			if (swtChanged())
-			{
-				if (!input)
-				{
-					input = true;
-					enteredPin[pinCounter] = switchSelected();
-					pinCounter++;
-				}
-			}
-			else
-			{
-				input = false;
-			}
-			if (pinCounter == 4)
-			{
-				displaySegment(enteredPin);
-				break;
-			}
-			DelayAprox10Us(1000);
-		}
->>>>>>> examples
+		displayEnterPINMessage();
+        insertPINBySwitches(enteredPin);
 		if (checkPin(enteredPin, pin) == 1)
 		{
 			LCD_DisplayClear();
@@ -400,9 +377,7 @@ int checkSafe(int pin[])
 		}
 		else
 		{
-			LCD_DisplayClear();
-			LCD_WriteStringAtPos("Vale PIN kood!", 0, 0);
-			DelayAprox10Us(5000);
+			displayWrongPINMessage();
 		}
 	}
 
@@ -423,7 +398,6 @@ int checkSafe(int pin[])
 **
 */
 void LEDTogglBySwitch()
-<<<<<<< HEAD
 {
 	int i;
 	for (i = 0; i < 8; i++)
@@ -449,33 +423,6 @@ void LEDTogglBySwitch()
 */
 int BTNPressed(unsigned char btnLetter)
 {
-=======
-{
-	int i;
-	for (i = 0; i < 8; i++)
-	{
-		LED_SetValue(i, SWT_GetValue(i));
-	}
-}
-
-/* ------------------------------------------------------------ */
-/***	BTNPressed
-**
-**	Parameters:
-**      btnLetter - letter of button on board
-**                  'R' , 'L' , 'U', 'D', 'C'
-**
-**	Return Value:
-**         1 - if chosen button is pressed
-**
-**	Description:
-**		When chosen button is pressed down, a function returns 1,
-**		otherwise function is running
-**
-*/
-int BTNPressed(unsigned char btnLetter)
-{
->>>>>>> examples
     while(true)
     {
         if (BTN_GetValue(btnLetter)) // true, if button is pressed
